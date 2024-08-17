@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
     "axios": "^1.7.4",
-    "cheerio": "^1.0.0"
+    "cheerio": "^1.0.0",
+    "mongoose": "^8.5.3"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
