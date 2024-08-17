@@ -1,23 +1,11 @@
 {
-  "name": "webscribe",
+  "name": "webscribe-interaction-simulator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/mongoose": "^5.11.97",
-    "axios": "^1.7.4",
-    "cheerio": "^1.0.0",
-    "mongoose": "^8.5.3"
-  },
-  "devDependencies": {
-    "@types/cheerio": "^0.22.35",
-    "@types/node": "^22.4.0",
-    "typescript": "^5.5.4"
+    "start": "cd server && npm start",
+    "install": "cd client && npm install && cd ../server && npm install",
+    "build": "cd client && npm run build && cd ../server && npm run build"
   }
 }
