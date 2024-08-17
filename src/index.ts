@@ -1,6 +1,6 @@
 import {scrapeWebPage} from "./scraper";
 
-const url = "https://google.com";
+const url: string = "https://www.scrapethissite.com/pages/";
 
 scrapeWebPage(url).then((result) => {
     if (result) {

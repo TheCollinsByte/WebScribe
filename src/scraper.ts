@@ -1,6 +1,6 @@
 import axios from "axios";
 import {ScrapeResult} from "./types";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 
 
 export async function scrapeWebPage(url: string): Promise<ScrapeResult | null> {
