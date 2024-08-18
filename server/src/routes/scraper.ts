@@ -1,8 +1,12 @@
-import express from 'express';
-import { scrapeAndInteract } from '../controllers/scraperController';
+import {Router} from "express";
+import {getInteractions, handleScrapeRequest} from '../controllers/scraperController';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/scrape', scrapeAndInteract);
+// handle scraping and interaction
+router.post('/scrape', handleScrapeRequest);
+
+// get all stored interactions
+router.get('/interactions', getInteractions);
 
 export default router;

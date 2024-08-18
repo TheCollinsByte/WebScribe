@@ -1,30 +1,50 @@
 import puppeteer from 'puppeteer';
+import { Interaction } from '../models/scrapedData';
 
-export const simulateBrowserInteractions = async (url: string) => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+export const scrapeAndInteract = async (url: string, actions: any[]) => {
+    try {
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
 
-    await page.goto(url, { waitUntil: 'networkidle0' });
+        console.log(`Navigating to ${url}`);
+        await page.goto(url, { waitUntil: 'networkidle2' });
 
-    // Example: Click a button with id 'submit-button'
-    await page.click('#submit-button');
+        const results = [];
 
-    // Example: Fill out a form
-    await page.type('#username', 'testuser');
-    await page.type('#password', 'password123');
-    await page.click('#login-button');
+        for (const action of actions) {
+            console.log(`Performing action: ${JSON.stringify(action)}`);
+            try {
+                if (action.type === 'click') {
+                    await page.click(action.selector);
+                    results.push({ action: 'click', selector: action.selector, status: 'success' });
+                } else if (action.type === 'type') {
+                    await page.type(action.selector, action.value);
+                    results.push({ action: 'type', selector: action.selector, value: action.value, status: 'success' });
+                } else {
+                    throw new Error(`Unsupported action type: ${action.type}`);
+                }
+            } catch (err) {
+                console.error(`Error performing action: ${err}`);
+                results.push({ action: action.type, selector: action.selector, status: 'failed', error: err });
+            }
+        }
 
-    // Wait for navigation
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+        const data = await page.content(); // Get the HTML content of the page
+        await browser.close();
 
-    // Extract data
-    const pageTitle = await page.title();
-    const pageContent = await page.content();
+        // Save the interaction and scraped data to MongoDB
+        const interaction = new Interaction({
+            url,
+            actions,
+            results,
+            scrapedContent: data,
+        });
 
-    await browser.close();
+        await interaction.save();
 
-    return {
-        title: pageTitle,
-        content: pageContent,
-    };
+        return { success: true, data, results };
+    } catch (error) {
+        console.error(`Error in scrapeAndInteract: ${error}`);
+        throw new Error(`Scraping and interaction failed: ${error}`);
+    }
 };
