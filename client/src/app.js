@@ -1,4 +1,4 @@
-// Handle form submission for scraping requests
+// Scraping Requests
 document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -12,7 +12,7 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch('/api/browser/scrape', {
+        const response = await fetch('http://localhost:3000/api/browser/scrape', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,43 +20,47 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
             body: JSON.stringify({ url, actions }),
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
-            document.getElementById('output').textContent = `Scrape results:\n${JSON.stringify(result.results, null, 2)}`;
-        } else {
-            document.getElementById('output').textContent = `Error: ${result.error}`;
+        if (!response.ok) {
+            const errorText = await response.text();  // Capture plain text error
+            throw new Error(errorText || 'Unknown error occurred during scraping.');
         }
+
+        const result = await response.json();  // Parse JSON response
+
+        document.getElementById('output').textContent = `Scrape results:\n${JSON.stringify(result.results, null, 2)}`;
     } catch (error) {
         console.error('Fetch error:', error);
         document.getElementById('output').textContent = `Fetch error: ${error.message}`;
     }
 });
 
-// Handle loading stored interactions
+
+// Load stored interactions
 document.getElementById('loadInteractions').addEventListener('click', async () => {
     try {
-        const response = await fetch('/api/browser/interactions');
-        const interactions = await response.json();
+        const response = await fetch('http://localhost:3000/api/browser/interactions');
 
-        if (response.ok) {
-            const interactionsList = interactions.map(interaction => {
-                return `
-                    <div class="interaction">
-                        <p><strong>URL:</strong> ${interaction.url}</p>
-                        <p><strong>Actions:</strong> ${JSON.stringify(interaction.actions, null, 2)}</p>
-                        <p><strong>Results:</strong> ${JSON.stringify(interaction.results, null, 2)}</p>
-                        <p><strong>Scraped Content:</strong> <pre>${interaction.scrapedContent}</pre></p>
-                        <p><strong>Timestamp:</strong> ${new Date(interaction.timestamp).toLocaleString()}</p>
-                        <hr/>
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('interactions').innerHTML = interactionsList;
-        } else {
-            document.getElementById('interactions').textContent = `Error: ${interactions.error}`;
+        if (!response.ok) {
+            const errorText = await response.text();  // Capture plain text error
+            throw new Error(errorText || 'Unknown error occurred while fetching interactions.');
         }
+
+        const interactions = await response.json();  // Parse JSON response
+
+        const interactionsList = interactions.map(interaction => {
+            return `
+                <div class="interaction">
+                    <p><strong>URL:</strong> ${interaction.url}</p>
+                    <p><strong>Actions:</strong> ${JSON.stringify(interaction.actions, null, 2)}</p>
+                    <p><strong>Results:</strong> ${JSON.stringify(interaction.results, null, 2)}</p>
+                    <p><strong>Scraped Content:</strong> <pre>${interaction.scrapedContent}</pre></p>
+                    <p><strong>Timestamp:</strong> ${new Date(interaction.timestamp).toLocaleString()}</p>
+                    <hr/>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('interactions').innerHTML = interactionsList;
     } catch (error) {
         console.error('Fetch error:', error);
         document.getElementById('interactions').textContent = `Fetch error: ${error.message}`;
