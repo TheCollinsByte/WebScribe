@@ -1,18 +1,19 @@
-import {scrapeWebPage} from "./scraper";
+import express from "express";
 import * as mongoose from "mongoose";
+import scraperRouter from './routes/scraper';
 
 const mongoUri = 'mongodb://webscribe:password@localhost:27017/webscraper?authSource=admin';
 
-const url: string = "https://www.scrapethissite.com/pages/";
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.static('public'));
 
 mongoose.connect(mongoUri)
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((err) => {
-        console.error('Error connecting to MongoDB:', err.message);
-    })
 
-scrapeWebPage(url).then(() => {
-    mongoose.connection.close();
-})
+app.use('/api', scraperRouter);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
