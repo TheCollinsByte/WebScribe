@@ -3,18 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Scraper and Interaction Simulator</title>
+    <title>Web Interaction Scraper</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <h1>Web Scraper and Interaction Simulator</h1>
 <div id="app">
+    <h1>Web Interaction Scraper</h1>
+
+    <!-- Form to submit scraping requests -->
     <form id="scrapeForm">
-        <input class= "glow-on-hover" type="url" id="urlInput" required placeholder="Enter URL to scrape">
-        <button class="glow-on-hover" type="submit">Scrape and Interact</button>
+        <input type="text" id="urlInput" placeholder="Enter URL" required />
+        <textarea id="actionsInput" placeholder="Enter actions in JSON format" required></textarea>
+        <button type="submit">Scrape</button>
     </form>
-    <div id="result"></div>
+
+    <!-- Section to display scraping output -->
+    <div id="output"></div>
+
+    <hr/>
+
+    <!-- Button to load interactions from the database -->
+    <button id="loadInteractions">Load Stored Interactions</button>
+
+    <!-- Section to display stored interactions -->
+    <div id="interactions"></div>
 </div>
-<script type="module" src="./app.js"></script>
+<script src="./app.js"></script>
 </body>
 </html>
