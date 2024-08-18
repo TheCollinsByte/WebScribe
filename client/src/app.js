@@ -21,7 +21,7 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();  // Capture plain text error
+            const errorText = await response.text();
             throw new Error(errorText || 'Unknown error occurred during scraping.');
         }
 

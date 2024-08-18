@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { scrapeAndInteract } from '../services/browserService';
 import { Interaction } from '../models/scrapedData';
 
-// Existing function
 export const handleScrapeRequest = async (req: Request, res: Response) => {
     const { url, actions } = req.body;
     console.log(`Received scrape request for URL: ${url} with actions: ${JSON.stringify(actions)}`);
@@ -19,7 +18,6 @@ export const handleScrapeRequest = async (req: Request, res: Response) => {
     }
 };
 
-// New function to retrieve stored interactions
 export const getInteractions = async (req: Request, res: Response) => {
     try {
         const interactions = await Interaction.find().sort({ timestamp: -1 });
