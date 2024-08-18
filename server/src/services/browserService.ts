@@ -3,6 +3,10 @@ import { Interaction } from '../models/scrapedData';
 
 export const scrapeAndInteract = async (url: string, actions: any[]) => {
     try {
+        if (!Array.isArray(actions)) {
+            throw new TypeError('actions must be an array.');
+        }
+
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
@@ -44,7 +48,7 @@ export const scrapeAndInteract = async (url: string, actions: any[]) => {
 
         return { success: true, data, results };
     } catch (error) {
-        console.error(`Error in scrapeAndInteract: ${error}`);
+        console.error(`Error in scrapeAndInteract: ${error || error}`);
         throw new Error(`Scraping and interaction failed: ${error}`);
     }
 };

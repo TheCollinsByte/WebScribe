@@ -6,8 +6,11 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
     let actions;
     try {
         actions = JSON.parse(document.getElementById('actionsInput').value);
+        if (!Array.isArray(actions)) {
+            throw new Error('Actions input must be an array.');
+        }
     } catch (err) {
-        alert('Invalid JSON format in actions field.');
+        alert('Invalid JSON format or actions input must be an array.');
         return;
     }
 
@@ -20,12 +23,16 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
             body: JSON.stringify({ url, actions }),
         });
 
+        const responseText = await response.text();
+
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Unknown error occurred during scraping.');
+            throw new Error(responseText || 'Unknown error occurred during scraping.');
         }
 
-        const result = await response.json();  // Parse JSON response
+        let result = {};
+        if (responseText) {
+            result = JSON.parse(responseText);
+        }
 
         document.getElementById('output').textContent = `Scrape results:\n${JSON.stringify(result.results, null, 2)}`;
     } catch (error) {
@@ -35,17 +42,18 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
 });
 
 
+
 // Load stored interactions
 document.getElementById('loadInteractions').addEventListener('click', async () => {
     try {
         const response = await fetch('http://localhost:3000/api/browser/interactions');
 
         if (!response.ok) {
-            const errorText = await response.text();  // Capture plain text error
+            const errorText = await response.text();
             throw new Error(errorText || 'Unknown error occurred while fetching interactions.');
         }
 
-        const interactions = await response.json();  // Parse JSON response
+        const interactions = await response.json();
 
         const interactionsList = interactions.map(interaction => {
             return `
