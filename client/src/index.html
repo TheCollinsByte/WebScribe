@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Interaction Scraper</title>
-    <link rel="stylesheet" href="./styles.css">
-</head>
-<body>
-<div id="app">
-    <h1>Web Interaction Scraper</h1>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Web Interaction Scraper</title>
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body>
+		<div id="app">
+			<h1>Web Interaction Scraper</h1>
 
-    <!-- Form to submit scraping requests -->
-    <form id="scrapeForm">
-        <input type="text" id="urlInput" placeholder="Enter URL" required />
-        <textarea id="actionsInput" placeholder="Enter actions in JSON format" required></textarea>
-        <button type="submit">Scrape</button>
-    </form>
+			<!-- Form to submit scraping requests -->
+			<form id="scrapeForm">
+				<input type="text" id="urlInput" placeholder="Enter URL" required />
+				<div class="actionsInputContainer">
+					<input class="actionsInp" type="text" id="actionsInputType" placeholder="Enter Type" />
+					<input class="actionsInp" type="text" id="actionsInputSelector" placeholder="Enter Actions" placeholder="Enter Selector" />
+					<input class="actionsInp" type="text" id="actionsInputValue" placeholder="Enter Value" />
+					<button class="addActionBtn" id="addActionBtn">+</button>
+				</div>
+				<!-- display all actions -->
+				<div>
+					<ul id="actionsList"></ul>
+				</div>
 
-    <!-- Section to display scraping output -->
-    <div id="output"></div>
+				<button type="submit">Scrape</button>
+			</form>
 
-    <hr/>
+			<!-- Section to display scraping output -->
+			<div id="output"></div>
 
-    <!-- Button to load interactions from the database -->
-    <button id="loadInteractions">Load Stored Interactions</button>
+			<hr />
 
-    <!-- Section to display stored interactions -->
-    <div id="interactions"></div>
-</div>
-<script src="./app.js"></script>
-</body>
+			<!-- Button to load interactions from the database -->
+			<button id="loadInteractions">Load Stored Interactions</button>
+
+			<!-- Section to display stored interactions -->
+			<div id="interactions"></div>
+		</div>
+		<script src="./app.js"></script>
+	</body>
 </html>
