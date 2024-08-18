@@ -1,27 +1,64 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('scrapeForm');
-    const urlInput = document.getElementById('urlInput');
-    const resultDiv = document.getElementById('result');
+// Handle form submission for scraping requests
+document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const url = urlInput.value;
+    const url = document.getElementById('urlInput').value;
+    let actions;
+    try {
+        actions = JSON.parse(document.getElementById('actionsInput').value);
+    } catch (err) {
+        alert('Invalid JSON format in actions field.');
+        return;
+    }
 
-        resultDiv.textContent = `Attempting to scrape: ${url}`;
+    try {
+        const response = await fetch('/api/browser/scrape', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url, actions }),
+        });
 
-        try {
-            const response = await fetch('http://localhost:3000/api/scrape', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ url }),
-            });
+        const result = await response.json();
 
-            const data = await response.json();
-            resultDiv.textContent = JSON.stringify(data, null, 2);
-        } catch (error) {
-            resultDiv.textContent = `Error: ${error.message}`;
+        if (response.ok) {
+            document.getElementById('output').textContent = `Scrape results:\n${JSON.stringify(result.results, null, 2)}`;
+        } else {
+            document.getElementById('output').textContent = `Error: ${result.error}`;
         }
-    });
+    } catch (error) {
+        console.error('Fetch error:', error);
+        document.getElementById('output').textContent = `Fetch error: ${error.message}`;
+    }
+});
+
+// Handle loading stored interactions
+document.getElementById('loadInteractions').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/browser/interactions');
+        const interactions = await response.json();
+
+        if (response.ok) {
+            const interactionsList = interactions.map(interaction => {
+                return `
+                    <div class="interaction">
+                        <p><strong>URL:</strong> ${interaction.url}</p>
+                        <p><strong>Actions:</strong> ${JSON.stringify(interaction.actions, null, 2)}</p>
+                        <p><strong>Results:</strong> ${JSON.stringify(interaction.results, null, 2)}</p>
+                        <p><strong>Scraped Content:</strong> <pre>${interaction.scrapedContent}</pre></p>
+                        <p><strong>Timestamp:</strong> ${new Date(interaction.timestamp).toLocaleString()}</p>
+                        <hr/>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('interactions').innerHTML = interactionsList;
+        } else {
+            document.getElementById('interactions').textContent = `Error: ${interactions.error}`;
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        document.getElementById('interactions').textContent = `Fetch error: ${error.message}`;
+    }
 });
