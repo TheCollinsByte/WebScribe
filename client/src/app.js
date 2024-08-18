@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('scrapeForm') as HTMLFormElement;
-    const urlInput = document.getElementById('urlInput') as HTMLInputElement;
-    const resultDiv = document.getElementById('result') as HTMLDivElement;
+    const form = document.getElementById('scrapeForm')
+    const urlInput = document.getElementById('urlInput')
+    const resultDiv = document.getElementById('result')
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
