@@ -1,6 +1,6 @@
 import axios from "axios";
 import {ScrapeResult} from "./types";
-import { ScrapeResult as ScrapeResultModel } from './models/ScrapeResult';
+import { ScrapeResult as ScrapeResultModel } from './models/scrapedData';
 import * as cheerio from "cheerio";
 
 
