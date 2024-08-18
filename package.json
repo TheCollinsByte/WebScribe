@@ -1,11 +1,11 @@
 {
-  "name": "webscribe-interaction-simulator",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "cd server && npm start",
-    "install": "cd client && npm install && cd ../server && npm install",
-    "build": "cd client && npm run build && cd ../server && npm run build"
-  }
+	"name": "webscribe-interaction-simulator",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "cd server && npm start",
+		"install": "cd client && npm install && cd ../server && npm install",
+		"build": "cd client && npm run build && cd ../server && npm run build"
+	}
 }
